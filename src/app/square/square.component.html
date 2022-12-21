@@ -1,0 +1,16 @@
+<svg:rect class="square-rect"
+          [attr.x]="squareXOffset"
+          [attr.width]="squareWidth"
+          [attr.height]="squareWidth"
+          y="0"
+          [attr.fill]="fill"
+          stroke="black"
+          shape-rendering="crispEdges">
+</svg:rect>
+<svg:text class="square-text"
+          [attr.x]="letterXOffset"
+          [attr.y]="letterYOffset"
+          [attr.font-size]="letterFontSize"
+          text-anchor="middle">
+  {{square.letter}}
+</svg:text>

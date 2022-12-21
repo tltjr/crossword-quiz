@@ -1,0 +1,7 @@
+.square-rect {
+  stroke-width: var(--square-stroke-width);
+}
+.square-text {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-weight: bold;
+}

@@ -5,7 +5,23 @@
   "projects": {
     "crossword-quiz": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -97,5 +113,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "439b3f75-9038-4d3b-86d9-385d3c7ba34b"
   }
 }

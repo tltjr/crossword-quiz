@@ -1,0 +1,35 @@
+#nav {
+  height: 75px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: var(--background-light);
+}
+#inner-nav {
+  margin: var(--side-margin-mobile);
+  margin-top: var(--mobile-nav-margin-fix);
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: var(--inner-nav-grid-template-columns);
+  font-weight: 500;
+}
+#nav-button {
+  margin-top: -5px;
+}
+#company-name {
+  margin: 20px 0 16px 0;
+  font-size: 22px;
+}
+#nav-items {
+  list-style: none;
+  margin: 23px 0 16px 0;
+  font-size: 18px;
+  padding: 0;
+}
+#nav ol {
+  display: flex;
+  justify-content: space-between;
+}
+#nav a {
+  color: var(--color-grey);
+}
