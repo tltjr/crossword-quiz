@@ -29,8 +29,8 @@ export class MainComponent implements OnInit {
   }
 
   onQuizComplete(event: any): void {
-    console.log(event);
     if (this.resultsComponent) {
+      this.quizComponent?.detachListeners();
       this.resultsComponent.setResults(event);
       this.activeComponent = 'results';
     }
@@ -41,6 +41,7 @@ export class MainComponent implements OnInit {
   }
 
   settings(): void {
+    this.quizComponent?.detachListeners();
     this.activeComponent = 'select';
   }
 

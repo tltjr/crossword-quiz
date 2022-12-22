@@ -20,7 +20,7 @@ export class ResultsComponent implements OnInit {
 
   setResults(results: any): void {
     this.results = results;
-    this.grade = results.filter((r: any) => r.result).length / results.length
+    this.grade = (results.filter((r: any) => r.result).length / results.length) * 100;
   }
 
   playAgain(): void {

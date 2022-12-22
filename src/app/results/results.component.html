@@ -1,33 +1,31 @@
 <div id="results">
-  <div id="results-main">
-    <h1 class="main-label">You scored {{grade}}%</h1>
-    <table class="table is-bordered is-striped">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Clue</th>
-          <th>Your answer</th>
-          <th>Answer</th>
-          <th>Correct?</th>
-          <th>Times used in a puzzle</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let row of results; let i = index;">
-          <td>{{i + 1}}</td>
-          <td>{{row.text}}</td>
-          <td>{{row.yourAnswer}}</td>
-          <td>{{row.answer}}</td>
-          <td>{{row.result}}</td>
-          <td>{{row.count}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="action-buttons">
-      <div class="button-large-container">
-        <button class="x-button-large button" type="button" (click)="changeSettings()">Settings</button>
-        <button class="x-button-large button" type="button" (click)="playAgain()">Replay</button>
-      </div>
+  <h1 class="main-label">You scored {{grade}}%</h1>
+  <table class="table is-bordered is-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Clue</th>
+        <th>Your answer</th>
+        <th>Answer</th>
+        <th>Correct?</th>
+        <th>Times used in a puzzle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of results; let i = index;">
+        <td>{{i + 1}}</td>
+        <td>{{row.text}}</td>
+        <td>{{row.yourAnswer}}</td>
+        <td>{{row.answer}}</td>
+        <td>{{row.result}}</td>
+        <td>{{row.count}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="action-buttons">
+    <div class="button-large-container">
+      <button class="x-button-large button" type="button" (click)="changeSettings()">Settings</button>
+      <button class="x-button-large button" type="button" (click)="playAgain()">Replay</button>
     </div>
   </div>
 </div>

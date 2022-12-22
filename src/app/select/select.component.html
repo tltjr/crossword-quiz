@@ -1,1 +1,19 @@
-<button style="margin: 200px;" type="button" (click)="startQuiz()">Go</button>
+<div id="select">
+  <div id="topic" class="control">
+    <label class="radio" *ngFor="let t of topics">
+      <input type="radio" name="topic" [(ngModel)]="selectedTopic" [value]="t">
+      {{t}}
+    </label>
+  </div>
+  <div id="difficulty" class="control">
+    <label class="radio" *ngFor="let d of difficulties">
+      <input type="radio" name="difficulty" [(ngModel)]="selectedDifficulty" [value]="d">
+      {{d}}
+    </label>
+  </div>
+  <div class="action-buttons">
+    <div class="button-container-single">
+      <button class="x-button button" type="button" (click)="startQuiz()">Play</button>
+    </div>
+  </div>
+</div>

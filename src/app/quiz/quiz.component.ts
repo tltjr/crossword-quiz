@@ -23,8 +23,8 @@ export class QuizComponent implements OnInit {
   letterIndex: number = 0;
 
   lastInput: string = '';
-  inputListener: () => void | null;
-  keydownListener: () => void | null;
+  inputListener: (() => void) | null;
+  keydownListener: (() => void) | null;
 
   topic: string = 'gods';
   difficulty: string = 'hard';
@@ -35,7 +35,6 @@ export class QuizComponent implements OnInit {
   constructor(private renderer: Renderer2, private dataService: DataService) {
     this.inputListener = () => {};
     this.keydownListener = () => {};
-    this.attachListeners();
   }
 
   next(): void {
@@ -104,6 +103,17 @@ export class QuizComponent implements OnInit {
     });
   }
 
+  detachListeners(): void {
+    if (this.keydownListener) {
+      this.keydownListener();
+      this.keydownListener = null;
+    }
+    if (this.inputListener) {
+      this.inputListener();
+      this.inputListener = null;
+    }
+  }
+
   startNewQuiz(topic: string, difficulty: string): void {
     this.topic = topic;
     this.difficulty = difficulty;
@@ -112,6 +122,7 @@ export class QuizComponent implements OnInit {
     this.currentQuestion = '';
     this.answerArray = [];
     this.setQuestion();
+    this.attachListeners();
   }
 
   ngOnInit(): void {

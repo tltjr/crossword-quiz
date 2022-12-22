@@ -7,13 +7,23 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class SelectComponent implements OnInit {
 
+  selectedTopic: string = 'Common';
+  topics: string[] = ['Common', 'Gods', 'Rivers', 'In France', 'In Spain', 'In Italy'];
+
+  selectedDifficulty: string = 'Hard';
+  difficulties: string[] = ['Easy', 'Medium', 'Hard'];
+
   @Output()
   select: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
   startQuiz(): void {
-    this.select.emit({ topic: 'gods', difficulty: 'hard' });
+    let topic = this.selectedTopic.toLocaleLowerCase().replace(/\s/g, '');
+    console.log(topic);
+    let difficulty = this.selectedDifficulty.toLocaleLowerCase().replace(/\s/g, '');
+    console.log(difficulty);
+    this.select.emit({ topic: topic, difficulty: difficulty });
   }
 
   ngOnInit(): void {
