@@ -53,15 +53,23 @@ export class QuizComponent implements OnInit {
 
   setQuestion(): void {
     this.answerArray.length = 0;
-    this.letterIndex = 0;
     if (this.questionIndex >= this.quiz.length) {
       this.quizComplete.emit(this.quiz);
     } else {
       this.currentQuestion = this.quiz[this.questionIndex];
       let charArray = this.currentQuestion.answer.split('');
-      this.answerArray.push(new Square('', true));
-      charArray.slice(1).forEach(() => {
-      this.answerArray.push(new Square('', false))
+      let revealedIndices = this.getRevealedIndices(charArray.length);
+      let startFound = false;
+      charArray.forEach((ch: string, index: number) => {
+        if (revealedIndices.includes(index)) {
+          this.answerArray.push(new Square(ch, false))
+        } else {
+          this.answerArray.push(new Square('', !startFound))
+          if (!startFound) {
+            this.letterIndex = index;
+          }
+          startFound = true;
+        }
       });
     }
   }
@@ -173,5 +181,30 @@ export class QuizComponent implements OnInit {
     const nextSq = this.answerArray[this.letterIndex];
     nextSq.current = true;
     this.answerArray[this.letterIndex] = {...nextSq};
+  }
+
+  private getRevealedIndices(length: any) {
+    let allIndices = [...Array(length).keys()]
+    let numberRevealed = 0;
+    switch (this.difficulty) {
+      case 'easy':
+        numberRevealed = Math.floor(length * 0.75);
+        break;
+      case 'medium':
+        numberRevealed = Math.floor(length * 0.5);
+        break;
+      case 'hard':
+        numberRevealed = 0;
+        break;
+    }
+    this.shuffleArray(allIndices);
+    return allIndices.slice(0, numberRevealed);
+  }
+
+  private shuffleArray(array: any[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
   }
 }
