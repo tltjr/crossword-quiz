@@ -6,9 +6,9 @@ import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { SquareComponent } from './square/square.component';
-import { AppRoutingModule } from './app-routing.module';
 import { ResultsComponent } from './results/results.component';
 import { SelectComponent } from './select/select.component';
+import { MainComponent } from './main/main.component';
 
 @NgModule({
   declarations: [
@@ -17,12 +17,12 @@ import { SelectComponent } from './select/select.component';
     QuizComponent,
     SquareComponent,
     ResultsComponent,
-    SelectComponent
+    SelectComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    AppRoutingModule
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

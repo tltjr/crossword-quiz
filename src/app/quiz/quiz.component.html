@@ -2,7 +2,7 @@
   <div id="quiz-main">
     <div class="quiz-card">
       <div class="quiz-card-content">
-        <h1 class="clue-label">Clue #{{questionIndex + 1}}</h1>
+        <h1 class="main-label">Clue #{{questionIndex + 1}}</h1>
         <p class="clue">{{currentQuestion.text}}</p>
         <form (submit)="next()">
           <div id="answer-container">
@@ -18,9 +18,9 @@
             </svg>
           </div>
           <div class="action-buttons">
-            <div class="quiz-button-container">
-              <button class="x-button-large quiz-button" type="button" (click)="skip()">Skip</button>
-              <button class="x-button-large quiz-button" type="submit">Next</button>
+            <div class="button-container">
+              <button class="x-button button" type="button" (click)="skip()">Skip</button>
+              <button class="x-button button" type="submit">Next</button>
             </div>
           </div>
         </form>

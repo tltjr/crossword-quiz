@@ -1,5 +1,11 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  Input,
+  OnInit,
+  Renderer2,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { DataService } from '../data.service';
 import { Square } from '../square';
 
@@ -11,7 +17,7 @@ import { Square } from '../square';
 export class QuizComponent implements OnInit {
   quiz: any;
   questionIndex = 0;
-  currentQuestion: any;
+  currentQuestion: any = '';
   answerArray: Square[] = [];
   squareWidth = 45;
   letterIndex: number = 0;
@@ -20,17 +26,22 @@ export class QuizComponent implements OnInit {
   inputListener: () => void | null;
   keydownListener: () => void | null;
 
-  constructor(private renderer: Renderer2, private dataService: DataService, private router: Router) {
-    this.quiz = this.dataService.getQuizData("gods");
+  topic: string = 'gods';
+  difficulty: string = 'hard';
+
+  @Output()
+  quizComplete: EventEmitter<any> = new EventEmitter();
+
+  constructor(private renderer: Renderer2, private dataService: DataService) {
     this.inputListener = () => {};
     this.keydownListener = () => {};
     this.attachListeners();
-    this.setQuestion();
   }
 
   next(): void {
     this.questionIndex++;
     let answer = this.answerArray.map((square) => square.letter).join("");
+    this.currentQuestion.yourAnswer = answer;
     this.currentQuestion.result = answer === this.currentQuestion.answer;
     this.setQuestion();
   }
@@ -45,7 +56,7 @@ export class QuizComponent implements OnInit {
     this.answerArray.length = 0;
     this.letterIndex = 0;
     if (this.questionIndex >= this.quiz.length) {
-      this.router.navigate(['/results']);
+      this.quizComplete.emit(this.quiz);
     } else {
       this.currentQuestion = this.quiz[this.questionIndex];
       let charArray = this.currentQuestion.answer.split('');
@@ -93,16 +104,15 @@ export class QuizComponent implements OnInit {
     });
   }
 
-  // detachListeners(): void {
-  //   if (this.keydownListener) {
-  //     this.keydownListener();
-  //     this.keydownListener = null;
-  //   }
-  //   if (this.inputListener) {
-  //     this.inputListener();
-  //     this.inputListener = null;
-  //   }
-  // }
+  startNewQuiz(topic: string, difficulty: string): void {
+    this.topic = topic;
+    this.difficulty = difficulty;
+    this.quiz = this.dataService.getQuizData(this.topic);
+    this.questionIndex = 0;
+    this.currentQuestion = '';
+    this.answerArray = [];
+    this.setQuestion();
+  }
 
   ngOnInit(): void {
   }

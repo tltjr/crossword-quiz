@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-select',
@@ -7,7 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectComponent implements OnInit {
 
+  @Output()
+  select: EventEmitter<any> = new EventEmitter<any>();
+
   constructor() { }
+
+  startQuiz(): void {
+    this.select.emit({ topic: 'gods', difficulty: 'hard' });
+  }
 
   ngOnInit(): void {
   }
