@@ -1,4 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Router } from '@angular/router';
+import { DataService } from '../data.service';
 import { Square } from '../square';
 
 @Component({
@@ -7,7 +9,9 @@ import { Square } from '../square';
   styleUrls: ['./quiz.component.css']
 })
 export class QuizComponent implements OnInit {
-  answer = 'THOR';
+  quiz: any;
+  questionIndex = 0;
+  currentQuestion: any;
   answerArray: Square[] = [];
   squareWidth = 45;
   letterIndex: number = 0;
@@ -16,23 +20,40 @@ export class QuizComponent implements OnInit {
   inputListener: () => void | null;
   keydownListener: () => void | null;
 
-  constructor(private renderer: Renderer2) {
-    let charArray = this.answer.split('');
-    this.answerArray.push(new Square('', true));
-    charArray.slice(1).forEach(() => {
-     this.answerArray.push(new Square('', false))
-    });
+  constructor(private renderer: Renderer2, private dataService: DataService, private router: Router) {
+    this.quiz = this.dataService.getQuizData("gods");
     this.inputListener = () => {};
     this.keydownListener = () => {};
     this.attachListeners();
+    this.setQuestion();
   }
 
   next(): void {
-    console.log('next');
+    this.questionIndex++;
+    let answer = this.answerArray.map((square) => square.letter).join("");
+    this.currentQuestion.result = answer === this.currentQuestion.answer;
+    this.setQuestion();
   }
 
   skip(): void {
-    console.log('skip');
+    this.questionIndex++;
+    this.currentQuestion.result = false;
+    this.setQuestion();
+  }
+
+  setQuestion(): void {
+    this.answerArray.length = 0;
+    this.letterIndex = 0;
+    if (this.questionIndex >= this.quiz.length) {
+      this.router.navigate(['/results']);
+    } else {
+      this.currentQuestion = this.quiz[this.questionIndex];
+      let charArray = this.currentQuestion.answer.split('');
+      this.answerArray.push(new Square('', true));
+      charArray.slice(1).forEach(() => {
+      this.answerArray.push(new Square('', false))
+      });
+    }
   }
 
   attachListeners(): void {
@@ -89,7 +110,8 @@ export class QuizComponent implements OnInit {
   private isValidKey(event: any): boolean {
     const isLetter = event.keyCode >= 65 && event.keyCode <= 90;
     const isBackspace = event.keyCode === 8;
-    if (!isLetter && !isBackspace) {
+    const isEnter = event.keyCode === 13;
+    if (!isLetter && !isBackspace && !isEnter) {
       return false;
     }
     return true;
@@ -101,6 +123,8 @@ export class QuizComponent implements OnInit {
       this.handleBackspace();
     } else if (event.keyCode >= 65 && event.keyCode <= 90) {
       this.handleLetter(event.key.toUpperCase());
+    } else if (event.keyCode === 13) {
+      this.next();
     }
   }
 

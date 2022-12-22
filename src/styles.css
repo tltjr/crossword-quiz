@@ -8,7 +8,7 @@
 /* all non phone */
 @media only screen and (min-width: 768px) {
   :root {
-    --side-margin-mobile: 0 auto;
+    --side-margin-mobile: 0 15px;
     --square-stroke-width: 2;
   }
 }
@@ -168,19 +168,6 @@ a {
   border: none;
   cursor: pointer;
   outline: none;
-}
-.custom-title {
-  color: #fff;
-  font-size: 52px;
-  letter-spacing: 1.4px;
-  line-height: 60px;
-  margin-bottom: 20px;
-  min-height: var(--custom-title-min-height);
-}
-.custom-description {
-  font-size: 24px;
-  margin: 15px 0 20px 0;
-  min-height: var(--custom-description-min-height);
 }
 .action-buttons {
   margin-top: var(--action-buttons-top-margin);

@@ -3,7 +3,7 @@
   width: 100%;
   position: fixed;
   top: 0;
-  background-color: var(--background-light);
+  color: #fff;
 }
 #inner-nav {
   margin: var(--side-margin-mobile);
@@ -31,5 +31,6 @@
   justify-content: space-between;
 }
 #nav a {
-  color: var(--color-grey);
+  color: #fff;
+  text-decoration: none;
 }

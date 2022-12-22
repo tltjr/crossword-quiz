@@ -1,5 +1,4 @@
 #quiz {
-  background-color: var(--primary-color);
   color: #fff;
   grid-template-rows: 100px 1fr;
   min-height: 100%;
@@ -12,6 +11,20 @@
   padding: var(--quiz-card-padding);
   margin: 0 auto;
   max-width: 600px;
+}
+.clue-label {
+  color: #fff;
+  font-size: 52px;
+  letter-spacing: 1.4px;
+  line-height: 60px;
+  margin-bottom: 20px;
+  min-height: var(--custom-title-min-height);
+}
+.clue {
+  text-align: center;
+  font-size: 36px;
+  margin: 75px 0 20px 0;
+  min-height: var(--custom-description-min-height);
 }
 .input-subtext {
   font-weight: 500;
@@ -56,8 +69,11 @@ input {
   max-width: 552px;
   width: calc(100% - 48px);
 }
+#answer-container {
+  text-align: center;
+}
 .quiz-button-container-single {
-  margin-top: 40px;
+  margin-top: 80px;
   display: grid;
   justify-content: center;
 }
@@ -65,7 +81,7 @@ input {
   background-color: var(--primary-color-dark);
 }
 .quiz-button-container {
-  margin-top: 40px;
+  margin-top: 80px;
   display: grid;
   justify-content: center;
   gap: var(--quiz-button-gap);

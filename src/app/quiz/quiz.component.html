@@ -1,11 +1,11 @@
-<div id="root">
-  <div id="quiz">
-    <div id="quiz-main">
-      <div class="quiz-card">
-        <div class="quiz-card-content">
-          <h1 class="custom-title">Question #1</h1>
-          <p class="custom-description">Clue: Norse god</p>
-          <form (submit)="next()">
+<div id="quiz">
+  <div id="quiz-main">
+    <div class="quiz-card">
+      <div class="quiz-card-content">
+        <h1 class="clue-label">Clue #{{questionIndex + 1}}</h1>
+        <p class="clue">{{currentQuestion.text}}</p>
+        <form (submit)="next()">
+          <div id="answer-container">
             <svg id="svg-answer"
                   [attr.width]="squareWidth * answerArray.length"
                   [attr.height]="squareWidth"
@@ -16,14 +16,14 @@
                               [squareWidth]="squareWidth" />
               </ng-container>
             </svg>
-            <div class="action-buttons">
-              <div class="quiz-button-container">
-                <button class="x-button-large quiz-button" type="button" (click)="skip()">Back</button>
-                <button class="x-button-large quiz-button" type="submit">Next</button>
-              </div>
+          </div>
+          <div class="action-buttons">
+            <div class="quiz-button-container">
+              <button class="x-button-large quiz-button" type="button" (click)="skip()">Skip</button>
+              <button class="x-button-large quiz-button" type="submit">Next</button>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
