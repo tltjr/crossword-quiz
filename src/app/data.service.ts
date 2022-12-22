@@ -3363,7 +3363,15 @@ export class DataService {
   constructor() { }
 
   getQuizData(topic: string, questions: number = 10): any {
-    const shuffled = this.data[topic].sort(() => 0.5 - Math.random());
+    const shuffled = this.data[topic];
+    this.shuffleArray(shuffled);
     return shuffled.slice(0, questions);
+  }
+
+  private shuffleArray(array: any[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
   }
 }
