@@ -177,10 +177,14 @@ export class QuizComponent implements OnInit {
     this.answerArray[this.letterIndex] = {...sq};
     if (this.letterIndex < this.answerArray.length - 1) {
       this.letterIndex++;
+      let nextSq = this.answerArray[this.letterIndex];
+      while (this.letterIndex < this.answerArray.length - 1 && nextSq.letter !== '') {
+        this.letterIndex++;
+        nextSq = this.answerArray[this.letterIndex];
+      }
+      nextSq.current = true;
+      this.answerArray[this.letterIndex] = {...nextSq};
     }
-    const nextSq = this.answerArray[this.letterIndex];
-    nextSq.current = true;
-    this.answerArray[this.letterIndex] = {...nextSq};
   }
 
   private getRevealedIndices(length: any) {
