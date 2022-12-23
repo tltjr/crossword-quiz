@@ -13,7 +13,8 @@
               <ng-container *ngFor="let square of answerArray; let columnIndex = index">
                 <g app-square [square]="square"
                               [columnIndex]="columnIndex"
-                              [squareWidth]="squareWidth" />
+                              [squareWidth]="squareWidth"
+                              (click)="click($event, columnIndex)"/>
               </ng-container>
             </svg>
           </div>
@@ -27,4 +28,5 @@
       </div>
     </div>
   </div>
+  <input id="hidden-input" type="text" #hiddenInput />
 </div>

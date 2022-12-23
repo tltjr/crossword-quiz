@@ -4,7 +4,9 @@ import {
   OnInit,
   Renderer2,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import { DataService } from '../data.service';
 import { Square } from '../square';
@@ -28,6 +30,9 @@ export class QuizComponent implements OnInit {
 
   topic: string = 'gods';
   difficulty: string = 'hard';
+
+  @ViewChild('hiddenInput')
+  hiddenInput: ElementRef | undefined;
 
   @Output()
   quizComplete: EventEmitter<any> = new EventEmitter();
@@ -71,6 +76,9 @@ export class QuizComponent implements OnInit {
           startFound = true;
         }
       });
+      if (this.hiddenInput) {
+        this.hiddenInput.nativeElement.focus();
+      }
     }
   }
 
@@ -131,6 +139,20 @@ export class QuizComponent implements OnInit {
     this.answerArray = [];
     this.setQuestion();
     this.attachListeners();
+  }
+
+  click(event: any, letterIndex: number): void {
+    event.preventDefault();
+    let sq = this.answerArray[this.letterIndex];
+    sq.current = false;
+    this.answerArray[this.letterIndex] = {...sq};
+    this.letterIndex = letterIndex;
+    sq = this.answerArray[this.letterIndex];
+    sq.current = true;
+    this.answerArray[this.letterIndex] = {...sq};
+    if (this.hiddenInput) {
+      this.hiddenInput.nativeElement.focus();
+    }
   }
 
   ngOnInit(): void {
