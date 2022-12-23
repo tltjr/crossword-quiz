@@ -15,7 +15,7 @@
 .clue {
   text-align: center;
   font-size: 36px;
-  margin: 75px 0 20px 0;
+  margin: var(--clue-margin);
   min-height: var(--custom-description-min-height);
 }
 #answer-container {

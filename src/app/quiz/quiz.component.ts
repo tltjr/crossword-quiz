@@ -140,7 +140,8 @@ export class QuizComponent implements OnInit {
     const isLetter = event.keyCode >= 65 && event.keyCode <= 90;
     const isBackspace = event.keyCode === 8;
     const isEnter = event.keyCode === 13;
-    if (!isLetter && !isBackspace && !isEnter) {
+    const isArrowKey = event.keyCode > 36 && event.keyCode < 41;
+    if (!isLetter && !isBackspace && !isEnter && !isArrowKey) {
       return false;
     }
     return true;
@@ -152,6 +153,8 @@ export class QuizComponent implements OnInit {
       this.handleBackspace();
     } else if (event.keyCode >= 65 && event.keyCode <= 90) {
       this.handleLetter(event.key.toUpperCase());
+    } else if (event.keyCode > 36 && event.keyCode < 41) {
+      this.handleArrow(event.keyCode);
     } else if (event.keyCode === 13) {
       this.next();
     }
@@ -185,6 +188,29 @@ export class QuizComponent implements OnInit {
       nextSq.current = true;
       this.answerArray[this.letterIndex] = {...nextSq};
     }
+  }
+
+  private handleArrow(keyCode: number): void {
+    const sq = this.answerArray[this.letterIndex];
+    sq.current = false;
+    this.answerArray[this.letterIndex] = {...sq};
+    switch (keyCode) {
+      // arrow left
+      case 37:
+        if (this.letterIndex > 0) {
+          this.letterIndex--;
+        }
+        break;
+      // arrow right
+      case 39:
+        if (this.letterIndex < this.answerArray.length - 1) {
+          this.letterIndex++
+        }
+        break;
+    }
+    const nextSq = this.answerArray[this.letterIndex];
+    nextSq.current = true;
+    this.answerArray[this.letterIndex] = {...nextSq};
   }
 
   private getRevealedIndices(length: any) {

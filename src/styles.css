@@ -17,49 +17,16 @@
 /* Mobile and Tablet (small desktop) */
 @media only screen and (max-width: 1024.98px) {
   :root {
-    --mobile-top-padding: 90px;
+    --results-padding: 50px 5px 75px 5px;
+    --mobile-top-padding: 50px;
     --inner-nav-grid-template-columns: 1fr;
     --mobile-nav-margin-fix: 6px;
     --h1-font-size: 54px;
     --h1-line-height: 56px;
-    --billboard-padding-top: var(--mobile-top-padding);
-    --billboard-grid-template-areas: "title"
-                                     "subtitle"
-                                     "button";
-    --billboard-grid-template-rows: 1fr 55px 55px;
-    --billboard-grid-template-columns: 1fr;
-    --howitworks-grid-template-areas: "one"
-                                      "two"
-                                      "three";
-    --howitworks-grid-template-columns: 1fr;
-    --howitworks-grid-template-rows: repeat(3, 1fr);
-    --sample-puzzle-download-inner-rows: 200px 50px 100px;
-    --download-sample-button-width: 60%;
-    --clue-ideas-grid-template-areas: "places"
-                                      "pets"
-                                      "sports"
-                                      "books"
-                                      "family"
-                                      "anything";
-
-    --pricing-grid-template-areas: "pricingtable";
-    --pricing-grid-template-columns: 1fr;
-    --pricing-grid-template-rows: 150px 1fr;
-    --pricing-summary-padding-top: 0;
-    --pricing-table-margin: 0 -25px;
     --quiz-card-padding: var(--mobile-top-padding) 0 350px 0;
-    --input-subtext-container-columns: 1fr;
-    --input-subtext-container-rows: 1fr 1fr;
-    --word-validation-error-alignment: left;
     --quiz-button-large-columns: 45% 45%;
     --quiz-button-gap: 5%;
-    --home-rows: 550px /* billboard */
-                 850px /* how it works */
-                 500px /* sample download */
-                 1200px/* clue ideas */
-                 1100px /* pricing */
-                 100px;/* footer */
-    --review-padding: var(--mobile-top-padding) 0 100px 0;
+    --clue-margin: 5px 0 20px 0;
     --custom-title-min-height: 120px;
     --custom-description-min-height: 85px;
     --side-margin-review: 0;
@@ -80,15 +47,15 @@
 /* All non mobile */
 @media only screen and (min-width: 1025px) {
   :root {
+    --results-padding: 125px;
     --inner-nav-grid-template-columns: 1fr 1fr;
     --mobile-nav-margin-fix: 0px;
     --h1-font-size: 76px;
     --h1-line-height: 78px;
-    --quiz-card-padding: 250px 0 350px 0;
-    --input-subtext-container-columns: 1fr 1fr;
-    --input-subtext-container-rows: 1fr;
+    --quiz-card-padding: 125px 0 350px 0;
     --quiz-button-large-columns: 175px 175px;
     --quiz-button-gap: 40px;
+    --clue-margin: 75px 0 20px 0;
     --custom-title-min-height: 60px;
     --custom-description-min-height: 54px;
     --side-margin-review: 0 auto;

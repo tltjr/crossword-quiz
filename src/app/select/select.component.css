@@ -3,3 +3,6 @@
   padding: 125px;
   max-width: 900px;
 }
+#select .dropdown-button {
+  background-color: white;
+}

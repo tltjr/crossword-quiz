@@ -3,9 +3,9 @@
   <table class="table is-bordered is-striped">
     <thead>
       <tr>
-        <th>#</th>
+        <th class="desktop-only">#</th>
         <th>Clue</th>
-        <th>Your answer</th>
+        <th class="desktop-only">Your answer</th>
         <th>Answer</th>
         <th>Correct?</th>
         <th>Times used in a puzzle</th>
@@ -13,9 +13,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let row of results; let i = index;">
-        <td>{{i + 1}}</td>
+        <td class="desktop-only">{{i + 1}}</td>
         <td>{{row.text}}</td>
-        <td>{{row.yourAnswer}}</td>
+        <td class="desktop-only">{{row.yourAnswer}}</td>
         <td>{{row.answer}}</td>
         <td>{{row.result}}</td>
         <td>{{row.count}}</td>
@@ -24,8 +24,8 @@
   </table>
   <div class="action-buttons">
     <div class="button-large-container">
-      <button class="x-button-large button" type="button" (click)="changeSettings()">Settings</button>
-      <button class="x-button-large button" type="button" (click)="playAgain()">Replay</button>
+      <button class="x-button button" type="button" (click)="changeSettings()">Settings</button>
+      <button class="x-button button" type="button" (click)="playAgain()">Replay</button>
     </div>
   </div>
 </div>
