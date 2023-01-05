@@ -1,3 +1,5 @@
+drop function if exists quiz.get_level;
+
 create or replace function quiz.get_level(_user_id int)
   returns table (level integer)
 language plpgsql as

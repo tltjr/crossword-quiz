@@ -19,7 +19,7 @@ import { environment } from 'src/environments/environment';
 })
 export class QuizComponent implements OnInit {
   level: number | undefined;
-  completionPercentage: string = "90%";
+  completionPercentage: string = "0%";
   questions: Question[] = [];
   questionIndex = 0;
   currentQuestion: Question | undefined;
@@ -43,10 +43,21 @@ export class QuizComponent implements OnInit {
   }
 
   next(): void {
-    this.questionIndex++;
     let answer = this.answerArray.map((square) => square.letter).join("");
-    // this.currentQuestion.yourAnswer = answer;
-    // this.currentQuestion.result = answer === this.currentQuestion.answer;
+    if (this.currentQuestion) {
+      let correct = answer === this.currentQuestion.answer;
+      this.currentQuestion.updateResult(correct);
+      let params = {
+        questionid: this.currentQuestion.questionid,
+        resultid: this.currentQuestion.resultid,
+        correct: correct,
+        difficulty: this.currentQuestion.difficulty()
+      }
+      this.httpClient.post(environment.baseUrl + 'result', params).subscribe((data) => {
+        console.log(data);
+      });
+    }
+    this.questionIndex++;
     this.setQuestion();
   }
 
@@ -162,11 +173,22 @@ export class QuizComponent implements OnInit {
           question.level);
       });
       this.questionIndex = 0;
+      this.updateCompletionPercentage();
       this.currentQuestion = undefined;
       this.answerArray = [];
       this.setQuestion();
       this.attachListeners();
     });
+  }
+
+  private updateCompletionPercentage(): void {
+    let totalQuestions = 0;
+    let totalComplete = 0;
+    this.questions.forEach((question: Question) => {
+      totalQuestions += 3;
+      totalComplete += question.totalComplete();
+    });
+    this.completionPercentage = `${Math.round((totalComplete / totalQuestions) * 100)}%`;
   }
 
   private isValidKey(event: any): boolean {

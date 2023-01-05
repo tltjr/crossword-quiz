@@ -42,4 +42,40 @@ export class Question {
       }
     }
   }
+
+  totalComplete(): number {
+    let numComplete = 0;
+    if (this.easy) {
+      numComplete++;
+    }
+    if (this.medium) {
+      numComplete++;
+    }
+    if (this.hard) {
+      numComplete++;
+    }
+    return numComplete;
+  }
+
+  updateResult(correct: boolean): void {
+    switch (this.difficulty()) {
+      case 'easy':
+        this.easy = correct;
+        break;
+      case 'medium':
+        this.medium = correct;
+        // If the user got the medium question wrong, we need to revert them to easy
+        if (!correct) {
+          this.easy = false;
+        }
+        break;
+      case 'hard':
+        this.hard = correct;
+        // If the user got the hard question wrong, we need to revert them to medium
+        if (!correct) {
+          this.medium = false;
+        }
+        break;
+    }
+  }
 }

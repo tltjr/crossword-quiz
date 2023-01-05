@@ -6,7 +6,7 @@
           <h2 id="level-label">Level {{level}} - {{completionPercentage}}</h2>
           <div class="contentContainer">
             <div class="skillBarContainer">
-              <div class="skillBarValue value-90"></div>
+              <div class="skillBarValue" [style.width]="completionPercentage"></div>
             </div>
           </div>
         </div>
