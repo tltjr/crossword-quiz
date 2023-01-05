@@ -7,6 +7,7 @@ export class Question {
   easy: boolean;
   medium: boolean;
   hard: boolean;
+  level: number;
 
   constructor(
     questionid: number,
@@ -16,7 +17,8 @@ export class Question {
     resultid: number,
     easy: boolean,
     medium: boolean,
-    hard: boolean
+    hard: boolean,
+    level: number
   ) {
     this.questionid = questionid;
     this.text = text;
@@ -26,6 +28,7 @@ export class Question {
     this.easy = easy;
     this.medium = medium;
     this.hard = hard;
+    this.level = level;
   }
 
   difficulty(): string {

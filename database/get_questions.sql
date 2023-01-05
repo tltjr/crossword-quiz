@@ -1,8 +1,11 @@
+drop function if exists quiz.get_questions;
+
 create or replace function quiz.get_questions(_user_id int)
   returns table (questionid integer,
     text text,
     answer character varying(15),
     usages integer,
+    level integer,
     resultid integer,
     easy boolean,
     medium boolean,
@@ -14,10 +17,10 @@ declare _level integer;
 
 begin
 
-  select level into _level from quiz.get_level(_user_id);
+  select l.level into _level from quiz.get_level(_user_id) l;
 
   return query
-  select q.questionid, q.text, q.answer, q.usages, r.resultid, r.easy, r.medium, r.hard
+  select q.questionid, q.text, q.answer, q.usages, q.level, r.resultid, r.easy, r.medium, r.hard
   from quiz.question q
   left join quiz.result r using(questionid)
   where (r.userid = _user_id or not exists (select 1 from quiz.result r2 where r2.userid = _user_id and r2.questionid = q.questionid))

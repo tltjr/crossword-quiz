@@ -18,6 +18,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./quiz.component.css']
 })
 export class QuizComponent implements OnInit {
+  level: number | undefined;
+  completionPercentage: string = "90%";
   questions: Question[] = [];
   questionIndex = 0;
   currentQuestion: Question | undefined;
@@ -60,6 +62,7 @@ export class QuizComponent implements OnInit {
       this.quizComplete.emit(this.questions);
     } else {
       this.currentQuestion = this.questions[this.questionIndex];
+      this.level = this.currentQuestion.level;
       if (this.currentQuestion && this.currentQuestion.answer) {
         let charArray = this.currentQuestion.answer.split('');
         let revealedIndices = this.getRevealedIndices(charArray.length);
@@ -155,7 +158,8 @@ export class QuizComponent implements OnInit {
           question.resultId,
           question.easy,
           question.medium,
-          question.hard);
+          question.hard,
+          question.level);
       });
       this.questionIndex = 0;
       this.currentQuestion = undefined;

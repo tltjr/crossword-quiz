@@ -2,7 +2,14 @@
   <div id="quiz-main">
     <div class="quiz-card">
       <div class="quiz-card-content">
-        <h1 class="main-label">Clue #{{questionIndex + 1}}</h1>
+        <div *ngIf="level" class="skillBar">
+          <h2 id="level-label">Level {{level}} - {{completionPercentage}}</h2>
+          <div class="contentContainer">
+            <div class="skillBarContainer">
+              <div class="skillBarValue value-90"></div>
+            </div>
+          </div>
+        </div>
         <p *ngIf="currentQuestion" class="clue">{{currentQuestion.text}}</p>
         <form (submit)="next()">
           <div id="answer-container">
