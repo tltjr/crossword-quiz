@@ -22,7 +22,7 @@ export class QuizComponent implements OnInit {
   completionPercentage: string = "0%";
   questions: Question[] = [];
   questionIndex = 0;
-  currentQuestion: Question | undefined;
+  currentQuestion: Question = new Question(0, '', '', 0, 0, false, false, false, 0);
   answerArray: Square[] = [];
   squareWidth = 45;
   letterIndex: number = 0;
@@ -44,10 +44,8 @@ export class QuizComponent implements OnInit {
 
   next(): void {
     let answer = this.answerArray.map((square) => square.letter).join("");
-    if (this.currentQuestion) {
-      let correct = answer === this.currentQuestion.answer;
-      this.updateResults(correct);
-    }
+    let correct = answer === this.currentQuestion.answer;
+    this.updateResults(correct);
     this.questionIndex++;
     this.setQuestion();
   }
@@ -61,11 +59,12 @@ export class QuizComponent implements OnInit {
   setQuestion(): void {
     this.answerArray.length = 0;
     if (this.questionIndex >= this.questions.length) {
-      this.quizComplete.emit(this.questions);
+      // this.quizComplete.emit(this.questions);
     } else {
       this.currentQuestion = this.questions[this.questionIndex];
+      console.log(this.currentQuestion.difficulty());
       this.level = this.currentQuestion.level;
-      if (this.currentQuestion && this.currentQuestion.answer) {
+      if (this.currentQuestion.answer) {
         let charArray = this.currentQuestion.answer.split('');
         let revealedIndices = this.getRevealedIndices(charArray.length);
         let startFound = false;
@@ -165,7 +164,6 @@ export class QuizComponent implements OnInit {
       });
       this.questionIndex = 0;
       this.updateCompletionPercentage();
-      this.currentQuestion = undefined;
       this.answerArray = [];
       this.setQuestion();
       this.attachListeners();
@@ -173,20 +171,17 @@ export class QuizComponent implements OnInit {
   }
 
   private updateResults(correct: boolean): void {
-    if (this.currentQuestion) {
-      this.currentQuestion.updateResult(correct);
-      let params = {
-        questionid: this.currentQuestion.questionid,
-        resultid: this.currentQuestion.resultid,
-        correct: correct,
-        difficulty: this.currentQuestion.difficulty()
-      }
-      console.log(params);
-      this.httpClient.post(environment.baseUrl + 'result', params).subscribe(() => {
-        console.log('result updated')
-      });
-      this.updateCompletionPercentage();
+    let params = {
+      questionid: this.currentQuestion.questionid,
+      resultid: this.currentQuestion.resultid,
+      correct: correct,
+      difficulty: this.currentQuestion.difficulty()
     }
+    console.log(params);
+    this.currentQuestion.updateResult(correct);
+    this.httpClient.post(environment.baseUrl + 'result', params).subscribe(() => {
+    });
+    this.updateCompletionPercentage();
   }
 
   private updateCompletionPercentage(): void {
@@ -279,19 +274,17 @@ export class QuizComponent implements OnInit {
   private getRevealedIndices(length: any) {
     let allIndices = [...Array(length).keys()]
     let numberRevealed = 0;
-    if (this.currentQuestion) {
-      let difficulty = this.currentQuestion.difficulty();
-      switch (difficulty) {
-        case 'easy':
-          numberRevealed = Math.floor(length * 0.75);
-          break;
-        case 'medium':
-          numberRevealed = Math.floor(length * 0.5);
-          break;
-        case 'hard':
-          numberRevealed = 0;
-          break;
-      }
+    let difficulty = this.currentQuestion.difficulty();
+    switch (difficulty) {
+      case 'easy':
+        numberRevealed = Math.floor(length * 0.75);
+        break;
+      case 'medium':
+        numberRevealed = Math.floor(length * 0.5);
+        break;
+      case 'hard':
+        numberRevealed = 0;
+        break;
     }
     this.shuffleArray(allIndices);
     return allIndices.slice(0, numberRevealed);
