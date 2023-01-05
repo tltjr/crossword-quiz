@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# don't commit appsettings.Development.json
+# don't commit files with passwords
 /service/appsettings.Development.json
+/database/deploy
 
 # Compiled output
 /client/dist
