@@ -33,51 +33,61 @@ public class QuizController : ControllerBase
     [Route("result")]
     public void UpdateResult([FromBody] Result result)
     {
-        using(var connection = new NpgsqlConnection(_connectionString))
+        try
         {
-            if (result.ResultId.HasValue)
+            Console.WriteLine(result.ToString());
+            using(var connection = new NpgsqlConnection(_connectionString))
             {
-                var (easy, medium, hard) = GetResults(result.ResultId.Value);
-                switch (result.Difficulty.ToLower()) {
-                  case "easy":
-                    easy = result.Correct;
-                    break;
-                  case "medium":
-                    medium = result.Correct;
-                    if (!result.Correct) {
-                      easy = false;
+                if (result.ResultId.HasValue)
+                {
+                    var (easy, medium, hard) = GetResults(result.ResultId.Value);
+                    switch (result.Difficulty.ToLower()) {
+                      case "easy":
+                        easy = result.Correct;
+                        break;
+                      case "medium":
+                        medium = result.Correct;
+                        if (!result.Correct) {
+                          easy = false;
+                        }
+                        break;
+                      case "hard":
+                        hard = result.Correct;
+                        if (!result.Correct) {
+                          medium = false;
+                        }
+                        break;
                     }
-                    break;
-                  case "hard":
-                    hard = result.Correct;
-                    if (!result.Correct) {
-                      medium = false;
-                    }
-                    break;
+                    connection.Execute(@"update quiz.result set easy = @easy, medium = @medium, hard = @hard
+                                        where resultid = @resultId and userId = @userId;",
+                                        new
+                                        {
+                                            easy = easy,
+                                            medium = medium,
+                                            hard = hard,
+                                            resultId = result.ResultId,
+                                            userId = _userId
+                                        });
                 }
-                connection.Execute(@"update quiz.result set easy = @easy, medium = @medium, hard = @hard
-                                     where resultid = @resultId and userId = @userId;",
-                                     new
-                                     {
-                                        easy = easy,
-                                        medium = medium,
-                                        hard = hard,
-                                        resultId = result.ResultId,
-                                        userId = _userId
-                                    });
+                else
+                {
+                    // we always start with easy so should be able to only update the easy column
+                    connection.Execute(@"insert into quiz.result (questionid, userid, easy)
+                                        values (@questionId, @userId, @easy);",
+                                          new
+                                          {
+                                            questionId = result.QuestionId,
+                                            userId = _userId,
+                                            easy = result.Correct
+                                          });
+                }
             }
-            else
-            {
-                // we always start with easy so should be able to only update the easy column
-                connection.Execute(@"insert into quiz.result (questionid, userid, easy)
-                                     values (@questionId, @userId, @easy);",
-                                      new
-                                      {
-                                        questionId = result.QuestionId,
-                                        userId = _userId,
-                                        easy = result.Correct
-                                      });
-            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Message: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
         }
     }
 

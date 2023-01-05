@@ -46,24 +46,15 @@ export class QuizComponent implements OnInit {
     let answer = this.answerArray.map((square) => square.letter).join("");
     if (this.currentQuestion) {
       let correct = answer === this.currentQuestion.answer;
-      this.currentQuestion.updateResult(correct);
-      let params = {
-        questionid: this.currentQuestion.questionid,
-        resultid: this.currentQuestion.resultid,
-        correct: correct,
-        difficulty: this.currentQuestion.difficulty()
-      }
-      this.httpClient.post(environment.baseUrl + 'result', params).subscribe((data) => {
-        console.log(data);
-      });
+      this.updateResults(correct);
     }
     this.questionIndex++;
     this.setQuestion();
   }
 
   skip(): void {
+    this.updateResults(false);
     this.questionIndex++;
-    // this.currentQuestion.result = false;
     this.setQuestion();
   }
 
@@ -166,7 +157,7 @@ export class QuizComponent implements OnInit {
           question.text,
           question.answer,
           question.usages,
-          question.resultId,
+          question.resultid,
           question.easy,
           question.medium,
           question.hard,
@@ -179,6 +170,23 @@ export class QuizComponent implements OnInit {
       this.setQuestion();
       this.attachListeners();
     });
+  }
+
+  private updateResults(correct: boolean): void {
+    if (this.currentQuestion) {
+      this.currentQuestion.updateResult(correct);
+      let params = {
+        questionid: this.currentQuestion.questionid,
+        resultid: this.currentQuestion.resultid,
+        correct: correct,
+        difficulty: this.currentQuestion.difficulty()
+      }
+      console.log(params);
+      this.httpClient.post(environment.baseUrl + 'result', params).subscribe(() => {
+        console.log('result updated')
+      });
+      this.updateCompletionPercentage();
+    }
   }
 
   private updateCompletionPercentage(): void {
