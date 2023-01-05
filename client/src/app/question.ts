@@ -78,4 +78,8 @@ export class Question {
         break;
     }
   }
+
+  allComplete(): boolean {
+    return this.easy && this.medium && this.hard;
+  }
 }

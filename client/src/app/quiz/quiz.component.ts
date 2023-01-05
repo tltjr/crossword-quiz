@@ -45,9 +45,20 @@ export class QuizComponent implements OnInit {
   next(): void {
     let answer = this.answerArray.map((square) => square.letter).join("");
     let correct = answer === this.currentQuestion.answer;
+    if (!correct) {
+      console.log('WRONG!');
+      console.log(`Correct answer: ${this.currentQuestion.answer}`);
+    } else {
+      console.log(`Answer: ${answer}`);
+      console.log(`Correct!`);
+    }
     this.updateResults(correct);
-    this.questionIndex++;
-    this.setQuestion();
+    if (this.questions.every((question) => question.allComplete())) {
+      console.info('Level cleared!!!');
+    } else {
+      this.questionIndex++;
+      this.setQuestion();
+    }
   }
 
   skip(): void {
@@ -58,31 +69,38 @@ export class QuizComponent implements OnInit {
 
   setQuestion(): void {
     this.answerArray.length = 0;
-    if (this.questionIndex >= this.questions.length) {
-      // this.quizComplete.emit(this.questions);
+    if (this.questionIndex === this.questions.length) {
+      this.getQuestions();
     } else {
       this.currentQuestion = this.questions[this.questionIndex];
-      console.log(this.currentQuestion.difficulty());
+      while (this.currentQuestion.allComplete() && this.questionIndex < this.questions.length - 1) {
+        this.questionIndex++;
+        this.currentQuestion = this.questions[this.questionIndex];
+      }
       this.level = this.currentQuestion.level;
       if (this.currentQuestion.answer) {
         let charArray = this.currentQuestion.answer.split('');
         let revealedIndices = this.getRevealedIndices(charArray.length);
         let startFound = false;
+        let question = '';
         charArray.forEach((ch: string, index: number) => {
           if (revealedIndices.includes(index)) {
-            this.answerArray.push(new Square(ch, false))
+            this.answerArray.push(new Square(ch, false));
+            question += ch;
           } else {
-            this.answerArray.push(new Square('', !startFound))
+            this.answerArray.push(new Square('', !startFound));
+            question += '_';
             if (!startFound) {
               this.letterIndex = index;
             }
             startFound = true;
           }
         });
+        console.log(`Difficulty: ${this.currentQuestion.difficulty()}; Question: ${question}`);
       }
-      if (this.hiddenInput) {
-        this.hiddenInput.nativeElement.focus();
-      }
+    }
+    if (this.hiddenInput) {
+      this.hiddenInput.nativeElement.focus();
     }
   }
 
@@ -149,6 +167,11 @@ export class QuizComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getQuestions();
+    this.attachListeners();
+  }
+
+  private getQuestions(): void {
     this.httpClient.get(environment.baseUrl + 'questions').subscribe((questions: any) => {
       this.questions = questions.map((question: any) => {
         return new Question(
@@ -166,7 +189,6 @@ export class QuizComponent implements OnInit {
       this.updateCompletionPercentage();
       this.answerArray = [];
       this.setQuestion();
-      this.attachListeners();
     });
   }
 
@@ -177,7 +199,6 @@ export class QuizComponent implements OnInit {
       correct: correct,
       difficulty: this.currentQuestion.difficulty()
     }
-    console.log(params);
     this.currentQuestion.updateResult(correct);
     this.httpClient.post(environment.baseUrl + 'result', params).subscribe(() => {
     });
