@@ -14,7 +14,7 @@ declare _level integer;
 
 begin
 
-  select level into _level from quiz.get_level(1);
+  select level into _level from quiz.get_level(_user_id);
 
   return query
   select q.questionid, q.text, q.answer, q.usages, r.resultid, r.easy, r.medium, r.hard
