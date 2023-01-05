@@ -1,10 +1,2 @@
-<app-select [hidden]="activeComponent !== 'select'"
-            (select)="onSelect($event)">
-</app-select>
-<app-quiz [hidden]="activeComponent !== 'quiz'"
-          (quizComplete)="onQuizComplete($event)">
+<app-quiz>
 </app-quiz>
-<app-results [hidden]="activeComponent !== 'results'"
-             (restart)="restart()"
-             (settings)="settings()">
-</app-results>

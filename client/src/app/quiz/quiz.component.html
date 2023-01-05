@@ -3,7 +3,7 @@
     <div class="quiz-card">
       <div class="quiz-card-content">
         <h1 class="main-label">Clue #{{questionIndex + 1}}</h1>
-        <p class="clue">{{currentQuestion.text}}</p>
+        <p *ngIf="currentQuestion" class="clue">{{currentQuestion.text}}</p>
         <form (submit)="next()">
           <div id="answer-container">
             <svg id="svg-answer"

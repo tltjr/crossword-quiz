@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   OnInit,
   Renderer2,
   Output,
@@ -8,8 +7,10 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { DataService } from '../data.service';
+import { HttpClient } from '@angular/common/http';
+import { Question } from '../question';
 import { Square } from '../square';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-quiz',
@@ -17,9 +18,9 @@ import { Square } from '../square';
   styleUrls: ['./quiz.component.css']
 })
 export class QuizComponent implements OnInit {
-  quiz: any;
+  questions: Question[] = [];
   questionIndex = 0;
-  currentQuestion: any = '';
+  currentQuestion: Question | undefined;
   answerArray: Square[] = [];
   squareWidth = 45;
   letterIndex: number = 0;
@@ -28,16 +29,13 @@ export class QuizComponent implements OnInit {
   inputListener: (() => void) | null;
   keydownListener: (() => void) | null;
 
-  topic: string = 'gods';
-  difficulty: string = 'hard';
-
   @ViewChild('hiddenInput')
   hiddenInput: ElementRef | undefined;
 
   @Output()
   quizComplete: EventEmitter<any> = new EventEmitter();
 
-  constructor(private renderer: Renderer2, private dataService: DataService) {
+  constructor(private renderer: Renderer2, private httpClient: HttpClient) {
     this.inputListener = () => {};
     this.keydownListener = () => {};
   }
@@ -45,37 +43,39 @@ export class QuizComponent implements OnInit {
   next(): void {
     this.questionIndex++;
     let answer = this.answerArray.map((square) => square.letter).join("");
-    this.currentQuestion.yourAnswer = answer;
-    this.currentQuestion.result = answer === this.currentQuestion.answer;
+    // this.currentQuestion.yourAnswer = answer;
+    // this.currentQuestion.result = answer === this.currentQuestion.answer;
     this.setQuestion();
   }
 
   skip(): void {
     this.questionIndex++;
-    this.currentQuestion.result = false;
+    // this.currentQuestion.result = false;
     this.setQuestion();
   }
 
   setQuestion(): void {
     this.answerArray.length = 0;
-    if (this.questionIndex >= this.quiz.length) {
-      this.quizComplete.emit(this.quiz);
+    if (this.questionIndex >= this.questions.length) {
+      this.quizComplete.emit(this.questions);
     } else {
-      this.currentQuestion = this.quiz[this.questionIndex];
-      let charArray = this.currentQuestion.answer.split('');
-      let revealedIndices = this.getRevealedIndices(charArray.length);
-      let startFound = false;
-      charArray.forEach((ch: string, index: number) => {
-        if (revealedIndices.includes(index)) {
-          this.answerArray.push(new Square(ch, false))
-        } else {
-          this.answerArray.push(new Square('', !startFound))
-          if (!startFound) {
-            this.letterIndex = index;
+      this.currentQuestion = this.questions[this.questionIndex];
+      if (this.currentQuestion && this.currentQuestion.answer) {
+        let charArray = this.currentQuestion.answer.split('');
+        let revealedIndices = this.getRevealedIndices(charArray.length);
+        let startFound = false;
+        charArray.forEach((ch: string, index: number) => {
+          if (revealedIndices.includes(index)) {
+            this.answerArray.push(new Square(ch, false))
+          } else {
+            this.answerArray.push(new Square('', !startFound))
+            if (!startFound) {
+              this.letterIndex = index;
+            }
+            startFound = true;
           }
-          startFound = true;
-        }
-      });
+        });
+      }
       if (this.hiddenInput) {
         this.hiddenInput.nativeElement.focus();
       }
@@ -130,17 +130,6 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  startNewQuiz(topic: string, difficulty: string): void {
-    this.topic = topic;
-    this.difficulty = difficulty;
-    this.quiz = this.dataService.getQuizData(this.topic);
-    this.questionIndex = 0;
-    this.currentQuestion = '';
-    this.answerArray = [];
-    this.setQuestion();
-    this.attachListeners();
-  }
-
   click(event: any, letterIndex: number): void {
     event.preventDefault();
     let sq = this.answerArray[this.letterIndex];
@@ -156,6 +145,24 @@ export class QuizComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.httpClient.get(environment.baseUrl + 'questions').subscribe((questions: any) => {
+      this.questions = questions.map((question: any) => {
+        return new Question(
+          question.questionid,
+          question.text,
+          question.answer,
+          question.usages,
+          question.resultId,
+          question.easy,
+          question.medium,
+          question.hard);
+      });
+      this.questionIndex = 0;
+      this.currentQuestion = undefined;
+      this.answerArray = [];
+      this.setQuestion();
+      this.attachListeners();
+    });
   }
 
   private isValidKey(event: any): boolean {
@@ -238,16 +245,19 @@ export class QuizComponent implements OnInit {
   private getRevealedIndices(length: any) {
     let allIndices = [...Array(length).keys()]
     let numberRevealed = 0;
-    switch (this.difficulty) {
-      case 'easy':
-        numberRevealed = Math.floor(length * 0.75);
-        break;
-      case 'medium':
-        numberRevealed = Math.floor(length * 0.5);
-        break;
-      case 'hard':
-        numberRevealed = 0;
-        break;
+    if (this.currentQuestion) {
+      let difficulty = this.currentQuestion.difficulty();
+      switch (difficulty) {
+        case 'easy':
+          numberRevealed = Math.floor(length * 0.75);
+          break;
+        case 'medium':
+          numberRevealed = Math.floor(length * 0.5);
+          break;
+        case 'hard':
+          numberRevealed = 0;
+          break;
+      }
     }
     this.shuffleArray(allIndices);
     return allIndices.slice(0, numberRevealed);
