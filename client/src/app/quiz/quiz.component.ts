@@ -10,6 +10,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { Question } from '../question';
 import { Square } from '../square';
+import { SquareUpdateParams } from '../square-update-params';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -43,23 +44,40 @@ export class QuizComponent implements OnInit {
   }
 
   next(): void {
-    let answer = this.answerArray.map((square) => square.letter).join("");
-    let correct = answer === this.currentQuestion.answer;
+    let correct = true;
+    this.answerArray.forEach((square, index) => {
+      if (square.letter !== this.currentQuestion.answer[index]) {
+        square.incorrect = true;
+        correct = false;
+      }
+    });
     if (!correct) {
       console.log('WRONG!');
       console.log(`Correct answer: ${this.currentQuestion.answer}`);
+      this.answerArray.forEach((square, index) => {
+        if (square.incorrect) {
+          this.udpateSquare({ index: index, letter: this.currentQuestion.answer[index] });
+        }
+      });
     } else {
+      let answer = this.answerArray.map((square) => square.letter).join("");
       console.log(`Answer: ${answer}`);
       console.log(`Correct!`);
+      this.answerArray.forEach((square, index) => {
+        this.udpateSquare({ index: index, correct: true });
+      });
     }
     this.updateResults(correct);
     if (this.questions.every((question) => question.allComplete())) {
-      console.info('Level cleared!!!');
+        console.info('Level cleared!!!');
     } else {
-      this.questionIndex++;
-      this.setQuestion();
+      setTimeout(() => {
+        this.questionIndex++;
+        this.setQuestion();
+      }, correct ? 500 : 1000);
     }
   }
+
 
   skip(): void {
     this.updateResults(false);
@@ -247,6 +265,7 @@ export class QuizComponent implements OnInit {
     if (this.letterIndex > 0) {
       this.letterIndex--;
     }
+    // this.udpateSquare({ index: this.letterIndex, current: true});
     const nextSq = this.answerArray[this.letterIndex];
     nextSq.current = true;
     this.answerArray[this.letterIndex] = {...nextSq};
@@ -316,5 +335,22 @@ export class QuizComponent implements OnInit {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
+  }
+
+  private udpateSquare({index, current, correct, incorrect, letter}: SquareUpdateParams): void {
+    const nextSq = this.answerArray[index];
+    if (current) {
+      nextSq.current = current;
+    }
+    if (correct) {
+      nextSq.correct = correct;
+    }
+    if (incorrect) {
+      nextSq.incorrect = incorrect;
+    }
+    if (letter) {
+      nextSq.letter = letter;
+    }
+    this.answerArray[index] = {...nextSq};
   }
 }

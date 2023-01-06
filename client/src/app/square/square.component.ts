@@ -33,14 +33,6 @@ export class SquareComponent implements OnInit {
     this.setFill();
   }
 
-  // TODO - respond to changes in squareWidth (screen size)
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes.squareWidth.currentValue !== changes.squareWidth.previousValue) {
-  //     this.squareWidth = changes.squareWidth.currentValue;
-  //     this.setLayout();
-  //   }
-  // }
-
   private setLayout(): void {
     this.squareXOffset = this.columnIndex * this.squareWidth;
     if (this.squareWidth >= 35) {
@@ -59,7 +51,11 @@ export class SquareComponent implements OnInit {
   }
 
   private setFill(): void {
-    if (this.square && this.square.current) {
+    if (this.square.correct) {
+      this.fill = '#00ff00';
+    } else if (this.square.incorrect) {
+      this.fill = '#ff0000';
+    } else if (this.square && this.square.current) {
       this.fill = '#ffda00';
     } else {
       this.fill = 'White';
